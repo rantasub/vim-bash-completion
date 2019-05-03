@@ -1,0 +1,57 @@
+*bash-completion.txt* Bash completion for vim
+
+===============================================================================
+CONTENTS                                               *BashCompletionContents*
+
+    1. Usage ........................ |BashCompletionUsage|
+    2. Example ...................... |BashCompletionExamples|
+    3. License ...................... |BashCompletionLicense|
+    4. Credits ...................... |BashCompletionCredits|
+
+===============================================================================
+Section 1: Usage                                          *BashCompletionUsage*
+
+This small plugin provides the single function *bash#complete* {partialCommand}
+that runs local bash completion over {partialCommand}. It returns all found
+completions in a list. See |BashCompletionExamples| for concrete use cases.
+
+By default, the plugin loads the bash completion from
+/usr/share/bash-completion/bash_completion. If the bash-completion script is
+installed at a different location on your system, set the BASH_COMPLETION_DIR
+environment variable to the path on which the bash-completion script is
+installed.
+
+===============================================================================
+Section 2: Example                                     *BashCompletionExamples*
+
+To print out a list of all completions for 'ls -' use >
+
+    >:echo bash#complete('ls -')
+<
+A typical use case is providing completion for custom defined commands. For
+example, for completing make targets one may define >
+
+    :command -nargs=* -complete=customlist,MakeCommandCompletion Make make
+    <args>
+<
+Here the custom completion function MakeCommandCompletion uses bash
+completion: >
+
+    function MakeCommandCompletion(ArgLead, CmdLine, CursorPos)
+        let l:words = split(a:CmdLine)
+        let l:words[0] = 'make'
+        let l:command = join(l:words)
+        return bash#complete(l:command)
+    endfunction
+<
+===============================================================================
+Section 3: License                                      *BashCompletionLicense*
+
+vim-bash-completion is licensed under the GNU GPLv3 License.
+
+===============================================================================
+Section 4: Credits                                      *BashCompletionCredits*
+
+The underlying script triggering the bash completion is based on
+https://brbsix.github.io/2015/11/29/accessing-tab-completion-programmatically-in-bash/
+written by Brian Beffa <brbsix@gmail.com>.
